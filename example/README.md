@@ -6,7 +6,7 @@ Este es un ejemplo **completo** que demuestra **TODOS los métodos** del paquete
 
 ### 📱 **3 Pantallas con NavigationBar**
 - **Productos**: Lista, categorías, filtros y detalles
-- **Usuarios**: Lista, detalles completos y sistema de login
+- **Usuarios**: Lista, detalles completos
 - **Carritos**: Lista de carritos con productos y precios
 
 ### 🛍️ **Métodos de Productos (4/4)**
@@ -18,7 +18,6 @@ Este es un ejemplo **completo** que demuestra **TODOS los métodos** del paquete
 ### 👥 **Métodos de Usuarios (3/3)**
 - ✅ `getAllUsers()` - Lista completa de usuarios
 - ✅ `getUser(id)` - Detalles específicos de un usuario
-- ✅ `login(username, password)` - Autenticación con token
 
 ### 🛒 **Métodos de Carritos (4/4)**
 - ✅ `getAllCarts()` - Lista completa de carritos
@@ -53,11 +52,8 @@ flutter run
 - **Estados**: Manejo de carga, error y datos vacíos
 
 ### 👥 **Pantalla de Usuarios**
-- **Demo de Login**: Formulario funcional con credenciales de prueba
-- **Token de autenticación**: Muestra el token JWT recibido tras login exitoso
 - **Lista de usuarios**: Muestra nombre completo, email y teléfono
 - **Detalles del usuario**: Modal con información personal y dirección completa
-- **Manejo de errores**: Feedback visual para errores de login y carga
 
 ### 🛒 **Pantalla de Carritos**
 - **Lista de carritos**: Muestra ID, usuario, cantidad de productos y fecha
@@ -104,7 +100,6 @@ El ejemplo demuestra el uso del **FakeStoreService** que internamente implementa
 
 ### E-commerce completo
 - **Catálogo de productos**: Con filtros y búsqueda
-- **Gestión de usuarios**: Login y perfiles
 - **Carritos de compra**: Con cálculo de totales
 
 ### Demo de API

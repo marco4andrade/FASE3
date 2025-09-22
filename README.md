@@ -119,13 +119,6 @@ for (final product in cart.products) {
 }
 ```
 
-## 🧹 Manejo de Recursos
-
-```dart
-// Liberar recursos al finalizar
-service.dispose();
-```
-
 ## 🏛️ Arquitectura
 
 Implementa **Clean Architecture** con tres capas:
@@ -142,16 +135,6 @@ Incluye una aplicación completa en `example/` que demuestra todos los métodos 
 cd example
 flutter pub get
 flutter run
-```
-
-## 🧪 Testing
-
-```bash
-# Ejecutar todos los tests
-flutter test
-
-# Solo tests de Clean Architecture
-flutter test test/clean_architecture_test.dart
 ```
 
 ## 📚 Documentación
