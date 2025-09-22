@@ -2,6 +2,17 @@
 
 Todos los cambios notables de este proyecto se documentarán en este archivo.
 
+## [1.0.2] - 2025-09-22
+
+### Mejorado
+- **Documentación del Ejemplo**: README completamente actualizado reflejando arquitectura BLoC
+- **Arquitectura Clarificada**: Separación clara entre paquete (Clean Architecture) y ejemplo (BLoC)
+- **Dependencias Documentadas**: flutter_bloc, equatable, get_it especificadas
+- **Estados BLoC**: Documentación detallada de estados (Initial, Loading, Loaded, Error, Filtered)
+- **Gestión de Estado**: Explicación completa del patrón BLoC implementado
+- **Estructura del Proyecto**: Documentación mejorada de capas y responsabilidades
+
+
 ## [1.0.0] - 2025-09-22
 
 ### Lanzamiento Oficial
@@ -34,7 +45,7 @@ Todos los cambios notables de este proyecto se documentarán en este archivo.
 - **Flutter Compatible**: Soporte completo para aplicaciones Flutter
 
 #### Documentación
-- **README Profesional**: Guía completa de instalación y uso
+- **README**: Guía completa de instalación y uso
 - **Ejemplos Prácticos**: Código de ejemplo para todos los casos de uso
 - **Documentación de Arquitectura**: Explicación detallada del diseño
 - **Aplicación de Ejemplo**: Implementación completa para referencia
@@ -47,7 +58,6 @@ final service = FakeStoreService();
 final products = await service.getAllProducts();
 final user = await service.getUser(1);
 final carts = await service.getAllCarts();
-service.dispose(); // Liberar recursos
 ```
 
 ## [0.0.1] - 2025-09-19

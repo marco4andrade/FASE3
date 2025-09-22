@@ -42,6 +42,18 @@ flutter pub get
 flutter run
 ```
 
+## 📦 **Dependencias principales**
+
+### Gestión de Estado
+- **flutter_bloc**: ^8.1.3 - Implementación BLoC para Flutter
+- **equatable**: ^2.0.5 - Comparación de estados e eventos
+
+### Inyección de Dependencias  
+- **get_it**: ^7.6.4 - Service locator para dependency injection
+
+### HTTP y Paquete
+- **fakestore_fase3_mandrade**: Paquete principal con Clean Architecture
+
 ## 📱 Funcionalidades por Pantalla
 
 ### 🛍️ **Pantalla de Productos**
@@ -70,11 +82,12 @@ flutter run
 - **Colores adaptativos**: Tema coherente en toda la app
 - **Iconografía consistente**: Icons de Material Design
 
-### Estados de la aplicación
-- **Loading**: Indicadores de progreso con mensajes descriptivos
-- **Error**: Pantallas de error con opciones de reintento
-- **Empty**: Estados vacíos con iconos y mensajes apropiados
-- **Success**: Datos mostrados de forma clara y organizada
+### Estados BLoC
+- **Initial**: Estado inicial antes de cargar datos
+- **Loading**: Indicadores de progreso durante operaciones asíncronas
+- **Loaded**: Datos cargados exitosamente y mostrados en UI
+- **Error**: Estados de error con mensajes descriptivos y opciones de reintento
+- **Filtered**: Estados específicos para filtros (productos por categoría)
 
 ### Interactividad
 - **Pull-to-refresh**: En todas las listas
@@ -84,17 +97,30 @@ flutter run
 
 ## 🔧 **Arquitectura demostrada**
 
-### Clean Architecture
-El ejemplo demuestra el uso del **FakeStoreService** que internamente implementa:
+### Clean Architecture + BLoC
+El ejemplo implementa una arquitectura completa con:
+
+#### Paquete (fakestore_fase3_mandrade)
+- **FakeStoreService**: Fachada simple que encapsula Clean Architecture
 - **Domain Layer**: Entidades puras (ProductEntity, UserEntity, CartEntity)
 - **Data Layer**: DTOs, DataSources y Repository implementations
-- **Presentation Layer**: Fachada simple para el desarrollador
+- **Presentation Layer**: Servicio unificado para el desarrollador
 
-### Manejo de Estados
-- **setState()**: Para actualizaciones de UI simples
-- **FutureBuilder**: Para operaciones asíncronas (implícito en los métodos)
-- **Error handling**: Try-catch con feedback visual
-- **Loading states**: Indicadores durante operaciones de red
+#### Aplicación de Ejemplo
+- **BLoC Layer**: Gestión de estado reactiva (ProductsBloc, UsersBloc, CartsBloc)
+- **Presentation Layer**: Widgets, páginas y componentes de UI
+- **Dependency Injection**: GetIt para inyección de dependencias
+- **Use Cases**: Casos de uso específicos para cada funcionalidad
+
+### Manejo de Estados con BLoC
+- **BLoC Pattern**: Gestión de estado reactiva y escalable
+- **ProductsBloc**: Maneja estados de productos (loading, loaded, error)
+- **UsersBloc**: Controla la carga y visualización de usuarios
+- **CartsBloc**: Gestiona carritos y sus detalles
+- **BlocBuilder**: Widgets reactivos que escuchan cambios de estado
+- **Event-driven**: Eventos claros para cada acción (LoadProducts, FilterByCategory, etc.)
+- **Estado inmutable**: Estados seguros y predecibles
+- **Separation of Concerns**: Lógica de presentación separada de la UI
 
 ## ✨ **Casos de uso reales**
 
