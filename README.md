@@ -29,7 +29,7 @@ Un paquete Flutter profesional que implementa **Clean Architecture** para intera
 
 ```yaml
 dependencies:
-  fakestore_fase3_mandrade: ^1.0.0
+  fakestore_fase3_mandrade: ^1.0.3
 ```
 
 ## 🚀 Uso Rápido
