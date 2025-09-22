@@ -136,10 +136,10 @@ Implementa **Clean Architecture** con tres capas:
 
 ## 📱 Aplicación de Ejemplo
 
-Incluye una aplicación completa en `example_simple/` que demuestra todos los métodos del paquete con UI moderna y manejo de estados.
+Incluye una aplicación completa en `example/` que demuestra todos los métodos del paquete con UI moderna y manejo de estados.
 
 ```bash
-cd example_simple
+cd example
 flutter pub get
 flutter run
 ```

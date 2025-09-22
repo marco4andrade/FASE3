@@ -30,7 +30,7 @@ Este es un ejemplo **completo** que demuestra **TODOS los métodos** del paquete
 
 1. Asegúrate de estar en el directorio del ejemplo:
 ```bash
-cd example_simple
+cd example
 ```
 
 2. Instala las dependencias:
