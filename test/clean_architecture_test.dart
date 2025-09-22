@@ -136,20 +136,6 @@ void main() {
       service.dispose();
     });
 
-    test('login debe retornar token', () async {
-      final mockClient = MockClient((request) async {
-        final response = {'token': 'clean_arch_token_12345'};
-        return http.Response(json.encode(response), 200);
-      });
-
-      service = FakeStoreService(httpClient: mockClient);
-      final token = await service.login('testuser', 'password');
-
-      expect(token, 'clean_arch_token_12345');
-
-      service.dispose();
-    });
-
     test('debe lanzar excepción cuando la API retorna error', () async {
       final mockClient = MockClient((request) async {
         return http.Response('Not Found', 404);

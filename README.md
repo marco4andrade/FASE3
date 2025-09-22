@@ -1,157 +1,117 @@
-# Fase 3 - Fake Store API Client
+# FakeStore Fase3 Mandrade
 
-Un paquete Flutter/Dart que implementa **Clean Architecture** para interactuar con la [Fake Store API](https://fakestoreapi.com/). Proporciona una interfaz ## 📱 Aplicación de Ejemplo
-
-### Ejemplo Completo (`example_simple/`)
-Aplicación completa con Material Design 3 que demuestra **todos los métodos de la API**:
-
-#### 🛍️ **Pantalla Products**
-- ✅ `getAllProducts()` - Lista con imágenes y filtros
-- ✅ `getCategories()` - Chips de categorías  
-- ✅ `getProductsInCategory()` - Filtrado dinámico
-- ✅ `getProduct(id)` - Modal con detalles completos
-
-#### 👥 **Pantalla Users**
-- ✅ `getAllUsers()` - Lista de usuarios
-- ✅ `getUser(id)` - Modal con dirección completa
-- ✅ `login()` - Autenticación con token
-
-#### 🛒 **Pantalla Carts**
-- ✅ `getAllCarts()` - Lista de carritos, perfecta para prototipado, aprendizaje y desarrollo de aplicaciones de comercio electrónico.
-
-## 🏗️ Arquitectura
-
-Este paquete implementa **Clean Architecture** con las siguientes capas:
-
-- **🏛️ Domain**: Entidades de negocio, contratos de repositorios y casos de uso
-- **📡 Data**: DTOs, fuentes de datos remotos e implementaciones de repositorios  
-- **🎨 Presentation**: Fachada simple (`FakeStoreService`) que oculta la complejidad
+Un paquete Flutter profesional que implementa **Clean Architecture** para interactuar con la [Fake Store API](https://fakestoreapi.com/). Ideal para prototipado rápido, aprendizaje y desarrollo de aplicaciones e-commerce.
 
 ## ✨ Características
 
-✅ **Clean Architecture** - Separación clara de responsabilidades y fácil testing  
-✅ **API Simple** - Fachada intuitiva con métodos claros y documentados  
-✅ **Completamente tipado** - Entidades de dominio con tipos seguros  
-✅ **Manejo de errores** - Excepciones descriptivas para mejor debugging  
-✅ **Testing completo** - Pruebas unitarias para todas las capas arquitectónicas  
-✅ **Null safety** - Compatible con la seguridad de nulls de Dart  
-✅ **Documentación completa** - Todos los métodos y clases están documentados  
+✅ **Clean Architecture** - Código mantenible y testeable  
+✅ **API Simple** - Una sola clase `FakeStoreService` para todo  
+✅ **Completamente tipado** - Entidades seguras con null safety  
+✅ **Manejo de errores** - Excepciones descriptivas  
+✅ **Testing incluido** - Suite completa de pruebas unitarias  
+✅ **Documentación completa** - Métodos y clases documentados  
 
-### Endpoints soportados
+## 🛍️ API Endpoints
 
-- 🛍️ **Productos**: Obtener, filtrar y buscar productos
-- 👥 **Usuarios**: Gestión de usuarios y perfiles  
-- 🛒 **Carritos**: Operaciones con carritos de compra
-- 🔐 **Autenticación**: Login y manejo de tokens
-- 📂 **Categorías**: Filtrado por categorías de productos
+| Categoría | Endpoints | Descripción |
+|-----------|-----------|-------------|
+| **Productos** | `getAllProducts()` | Lista completa de productos |
+| | `getProduct(id)` | Detalles de producto específico |
+| | `getCategories()` | Todas las categorías |
+| | `getProductsInCategory()` | Productos por categoría |
+| **Usuarios** | `getAllUsers()` | Lista completa de usuarios |
+| | `getUser(id)` | Detalles de usuario específico |
+| **Carritos** | `getAllCarts()` | Lista completa de carritos |
+| | `getCart(id)` | Detalles de carrito específico |
+| | `getUserCarts(userId)` | Carritos de un usuario |
 
-## Instalación
-
-Agrega `fakestore_fase3_mandrade` a tu archivo `pubspec.yaml`:
+## 📦 Instalación
 
 ```yaml
 dependencies:
-  fakestore_fase3_mandrade: ^0.0.1
+  fakestore_fase3_mandrade: ^1.0.0
 ```
 
-Luego ejecuta:
-
-```bash
-flutter pub get
-```
-
-## 🚀 Uso básico
-
-### Configuración inicial
+## 🚀 Uso Rápido
 
 ```dart
 import 'package:fakestore_fase3_mandrade/fakestore_fase3_mandrade.dart';
 
-// Crear el servicio (maneja toda la complejidad de Clean Architecture)
+// Crear el servicio
 final service = FakeStoreService();
 
-// El servicio implementa Clean Architecture internamente:
-// Domain: ProductEntity, UserEntity, CartEntity
-// Data: ProductDto, UserDto, CartDto + Remote DataSource
-// Presentation: FakeStoreService (fachada simple)
-```
-
-### 🛍️ Trabajar con Productos
-
-```dart
-// Obtener todos los productos (retorna ProductEntity)
+// Obtener productos
 final products = await service.getAllProducts();
-
-// Obtener productos con límite y ordenamiento
-final limitedProducts = await service.getAllProducts(limit: 5, sort: 'asc');
+print('${products.length} productos disponibles');
 
 // Obtener producto específico
 final product = await service.getProduct(1);
+print('${product.title} - \$${product.price}');
 
-// Obtener categorías disponibles
+// Obtener categorías
 final categories = await service.getCategories();
+print('Categorías: ${categories.join(", ")}');
 
-// Obtener productos de una categoría
-final categoryProducts = await service.getProductsInCategory('electronics');
+// Obtener usuarios
+final users = await service.getAllUsers();
+print('${users.length} usuarios registrados');
 
-// Los productos son entidades de dominio puras
+// Obtener carritos
+final carts = await service.getAllCarts();
+print('${carts.length} carritos activos');
+
+// Limpiar recursos
+service.dispose();
+```
+
+## 📊 Ejemplos Detallados
+
+### 🛍️ Productos
+
+```dart
+// Lista con filtros
+final products = await service.getAllProducts(limit: 10, sort: 'desc');
+
+// Categorías disponibles
+final categories = await service.getCategories();
+// ['electronics', 'jewelery', 'men\'s clothing', 'women\'s clothing']
+
+// Filtrar por categoría
+final electronics = await service.getProductsInCategory('electronics');
+
+// Producto específico
+final product = await service.getProduct(1);
 print('${product.title} - \$${product.price}');
 print('Rating: ${product.rating.rate}/5 (${product.rating.count} reviews)');
 ```
 
-// Obtener productos por categoría
-final electronics = await apiClient.getProductsInCategory('electronics');
-```
-
-### 👥 Gestión de Usuarios
+### 👥 Usuarios
 
 ```dart
-// Obtener todos los usuarios (retorna UserEntity)
-final users = await service.getAllUsers();
+// Lista de usuarios
+final users = await service.getAllUsers(limit: 5);
 
-// Obtener usuarios con límite y ordenamiento
-final limitedUsers = await service.getAllUsers(limit: 5, sort: 'desc');
-
-// Obtener usuario específico
+// Usuario específico
 final user = await service.getUser(1);
-
-// Acceso a datos del usuario con entidades ricas
-print('${user.name.fullName}'); // Combina firstName + lastName automáticamente
+print('${user.name.firstName} ${user.name.lastName}');
 print('Email: ${user.email}');
-print('Usuario: ${user.username}');
 print('Ciudad: ${user.address.city}');
-print('Coordenadas: ${user.address.geolocation.latitude}, ${user.address.geolocation.longitude}');
-
-// Autenticación
-final token = await service.login('mor_2314', '83r5^_');
-print('Token recibido: $token');
 ```
 
-### 🛒 Operaciones con Carritos
+### 🛒 Carritos
 
 ```dart
-// Obtener todos los carritos (retorna CartEntity)
+// Todos los carritos
 final carts = await service.getAllCarts();
 
-// Obtener carritos con filtros
-final filteredCarts = await service.getAllCarts(
-  limit: 5,
-  sort: 'desc',
-  startDate: DateTime.parse('2019-12-10'),
-  endDate: DateTime.parse('2020-10-10'),
-);
-
-// Obtener carrito específico
+// Carrito específico
 final cart = await service.getCart(1);
+print('Carrito del usuario: ${cart.userId}');
+print('Total productos: ${cart.totalProducts}');
 
-// Obtener carritos de un usuario específico
+// Carritos de un usuario
 final userCarts = await service.getUserCarts(1);
-
-// Acceso a información rica del carrito
-print('Usuario: ${cart.userId}');
-print('Fecha: ${cart.date}');
-print('Total de productos: ${cart.totalProducts}'); // Suma automática
-print('Productos únicos: ${cart.products.length}');
+print('Usuario tiene ${userCarts.length} carritos');
 
 // Iterar productos del carrito
 for (final product in cart.products) {
@@ -159,82 +119,24 @@ for (final product in cart.products) {
 }
 ```
 
-### ⚠️ Manejo de Errores
-
-Manejo robusto de errores con excepciones descriptivas:
+## 🧹 Manejo de Recursos
 
 ```dart
-try {
-  final product = await service.getProduct(999);
-  print('Producto encontrado: ${product.title}');
-} catch (e) {
-  print('Error: $e');
-  // El error contiene información específica sobre lo que falló
-  // Ej: "Product with ID 999 not found" 
-}
-```
-
-### 🧹 Liberación de Recursos
-
-```dart
-// Liberar recursos del cliente HTTP y conexiones
+// Liberar recursos al finalizar
 service.dispose();
 ```
 
-## 🏛️ Arquitectura Clean
+## 🏛️ Arquitectura
 
-### Capas implementadas
-- **🏛️ Domain**: Entidades de negocio puras (`ProductEntity`, `UserEntity`, `CartEntity`)
-- **📡 Data**: DTOs para serialización y DataSources remotos
+Implementa **Clean Architecture** con tres capas:
+
+- **🎯 Domain**: Entidades puras (`ProductEntity`, `UserEntity`, `CartEntity`)
+- **📡 Data**: DTOs y conexiones HTTP  
 - **🎨 Presentation**: `FakeStoreService` como fachada simple
-- **🔧 Use Cases**: Lógica de negocio encapsulada y reutilizable
-
-### Beneficios
-- **Testing independiente**: Cada capa se puede testear por separado
-- **Mantenibilidad**: Separación clara de responsabilidades  
-- **Extensibilidad**: Fácil agregar nuevas funcionalidades
-- **Dominio puro**: Sin dependencias externas en las entidades
-
-## 📊 Modelos de Datos
-
-### Entidades de Dominio
-- **`ProductEntity`** - Producto con información completa (título, precio, descripción, categoría, imagen, rating)
-- **`UserEntity`** - Usuario con datos personales y de contacto
-- **`CartEntity`** - Carrito con cálculos automáticos y lista de productos
-- **`RatingEntity`** - Calificación con promedio y número de reseñas
-- **`NameEntity`** - Nombre con métodos útiles (`fullName`)
-- **`AddressEntity`** - Dirección completa con geolocalización
-- **`GeolocationEntity`** - Coordenadas de latitud y longitud
-- **`CartProductEntity`** - Producto en carrito con cantidad
 
 ## 📱 Aplicación de Ejemplo
 
-### Ejemplo Simple (`example_simple/`)
-Aplicación simple y limpia que demuestra el uso básico del paquete:
-
-#### ✨ **Características**
-- **Una sola pantalla**: Lista de productos fácil de entender
-- **Interfaz moderna**: Material Design 3 con UI responsiva
-- **Manejo completo de estados**: Carga, error y éxito
-- **Detalles interactivos**: Modal con información completa del producto
-- **Solo ~200 líneas**: Código fácil de leer y modificar
-
-#### �️ **Funcionalidades implementadas**
-- ✅ `getAllProducts()` - Lista completa de productos
-- ✅ Imágenes, títulos, precios y calificaciones
-- ✅ Modal de detalles con descripción completa
-- ✅ Botón de recarga y manejo de errores
-- ✅ `getCart(id)` - Modal con productos del carrito
-- ✅ `getUserCarts()` - Filtro por usuario
-
-#### **Características:**
-- **NavigationBar** con 3 pestañas
-- **Estados completos**: Loading, Error, Empty, Success
-- **UI moderna** con Material Design 3
-- **Manejo robusto de errores** con retry
-- **11/11 métodos demostrados** (100% cobertura)
-
-### Ejecutar el Ejemplo
+Incluye una aplicación completa en `example_simple/` que demuestra todos los métodos del paquete con UI moderna y manejo de estados.
 
 ```bash
 cd example_simple
@@ -244,9 +146,6 @@ flutter run
 
 ## 🧪 Testing
 
-### Tests incluidos
-El paquete incluye tests completos para todas las capas de Clean Architecture:
-
 ```bash
 # Ejecutar todos los tests
 flutter test
@@ -255,60 +154,12 @@ flutter test
 flutter test test/clean_architecture_test.dart
 ```
 
-### Testing en tu aplicación
+## 📚 Documentación
 
-```dart
-import 'package:http/testing.dart';
-import 'package:fakestore_fase3_mandrade/fakestore_fase3_mandrade.dart';
-import 'dart:convert';
+- [Documentación API](https://fakestoreapi.com/docs)
+- [Changelog](CHANGELOG.md)
+- [Licencia](LICENSE)
 
-// Mock del cliente HTTP para testing
-final mockClient = MockClient((request) async {
-  // Simular respuesta de productos
-  if (request.url.path.contains('/products')) {
-    return http.Response(json.encode([
-      {
-        'id': 1,
-        'title': 'Test Product',
-        'price': 29.99,
-        'description': 'Test description',
-        'category': 'electronics',
-        'image': 'https://test.com/image.jpg',
-        'rating': {'rate': 4.5, 'count': 10}
-      }
-    ]), 200);
-  }
-  
-  return http.Response('Not Found', 404);
-});
+---
 
-// Usar el mock en tests
-final service = FakeStoreService(httpClient: mockClient);
-final products = await service.getAllProducts();
-
-// Verificar que retorna ProductEntity
-expect(products, isA<List<ProductEntity>>());
-expect(products.first.title, equals('Test Product'));
-```
-
-## Contribuir
-
-¡Las contribuciones son bienvenidas! Por favor:
-
-1. Fork el repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit tus cambios (`git commit -am 'Agrega nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Abre un Pull Request
-
-## Licencia
-
-Este proyecto está bajo la Licencia MIT - consulta el archivo [LICENSE](LICENSE) para más detalles.
-
-## API Reference
-
-Para más información sobre la API utilizada, consulta la [documentación oficial de Fake Store API](https://fakestoreapi.com/docs).
-
-## Changelog
-
-Consulta [CHANGELOG.md](CHANGELOG.md) para ver el historial de cambios.
+**Creado por Marco Andrade** - [GitHub](https://github.com/marco4andrade/FASE3)

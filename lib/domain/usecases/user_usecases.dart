@@ -22,14 +22,3 @@ class GetUserById {
     return repository.getUserById(id);
   }
 }
-
-/// Caso de uso para login
-class LoginUser {
-  final UserRepository repository;
-
-  LoginUser(this.repository);
-
-  Future<String> call(String username, String password) {
-    return repository.login(username, password);
-  }
-}

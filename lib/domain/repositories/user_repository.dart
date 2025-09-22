@@ -7,7 +7,4 @@ abstract class UserRepository {
 
   /// Obtiene un usuario por su ID
   Future<UserEntity> getUserById(int id);
-
-  /// Autentica un usuario y retorna un token
-  Future<String> login(String username, String password);
 }

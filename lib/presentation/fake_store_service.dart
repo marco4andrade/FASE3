@@ -30,7 +30,6 @@ class FakeStoreService {
 
   late final GetAllUsers _getAllUsers;
   late final GetUserById _getUserById;
-  late final LoginUser _loginUser;
 
   late final GetAllCarts _getAllCarts;
   late final GetCartById _getCartById;
@@ -54,7 +53,6 @@ class FakeStoreService {
 
     _getAllUsers = GetAllUsers(_userRepository);
     _getUserById = GetUserById(_userRepository);
-    _loginUser = LoginUser(_userRepository);
 
     _getAllCarts = GetAllCarts(_cartRepository);
     _getCartById = GetCartById(_cartRepository);
@@ -96,10 +94,6 @@ class FakeStoreService {
 
   Future<UserEntity> getUser(int id) {
     return _getUserById(id);
-  }
-
-  Future<String> login(String username, String password) {
-    return _loginUser(username, password);
   }
 
   // CARRITOS

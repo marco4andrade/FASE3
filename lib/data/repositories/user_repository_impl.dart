@@ -22,9 +22,4 @@ class UserRepositoryImpl implements UserRepository {
     final userDto = await _remoteDataSource.getUserById(id);
     return userDto.toEntity();
   }
-
-  @override
-  Future<String> login(String username, String password) async {
-    return _remoteDataSource.login(username, password);
-  }
 }

@@ -123,21 +123,6 @@ class FakeStoreRemoteDataSource {
     }
   }
 
-  Future<String> login(String username, String password) async {
-    final response = await _httpClient.post(
-      Uri.parse('$_baseUrl/auth/login'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({'username': username, 'password': password}),
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = json.decode(response.body);
-      return responseData['token'] as String;
-    } else {
-      throw Exception('Error de autenticación: ${response.statusCode}');
-    }
-  }
-
   // ===== CARRITOS =====
 
   Future<List<CartDto>> getAllCarts({
