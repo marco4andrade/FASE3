@@ -2,6 +2,29 @@
 
 Todos los cambios notables de este proyecto se documentarán en este archivo.
 
+## [1.0.3] - 2025-09-22
+
+### ✨ Actualizado - Ejemplo Completo
+- **🎯 Cobertura 100%**: Ejemplo ahora demuestra TODOS los 9 métodos del paquete
+- **🔥 9 Botones Funcionales**: Cada método tiene su propio botón de prueba
+- **📋 Métodos Generales**: getAllProducts(), getAllUsers(), getAllCarts(), getCategories()
+- **🎯 Métodos Específicos**: getProduct(id), getProductsInCategory(), getUser(id), getCart(id), getUserCarts(userId)
+- **📱 UI Mejorada**: ScrollView para manejar todos los botones, separación visual clara
+- **📚 README Actualizado**: Documentación completamente renovada y sin duplicaciones
+
+### 🚀 Mejoras del Ejemplo
+- **Interfaz Scrollable**: SingleChildScrollView para pantallas pequeñas
+- **Separación Clara**: Sección de métodos generales vs específicos
+- **Resultados Detallados**: Cada método muestra información relevante y específica
+- **Manejo de Errores**: Try-catch individual para cada método
+- **Código Limpio**: Estructura clara y comentarios útiles
+
+### 📖 Documentación
+- **README Reorganizado**: Estructura limpia sin contenido duplicado o mezclado
+- **Tabla de Métodos**: Resumen visual de los 9/9 métodos implementados (100%)
+- **Instrucciones Claras**: Pasos precisos para ejecutar el ejemplo
+- **Código de Ejemplo**: Snippets actualizados mostrando todos los métodos disponibles
+
 ## [1.0.2] - 2025-09-22
 
 ### Mejorado

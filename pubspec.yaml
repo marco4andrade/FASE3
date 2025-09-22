@@ -1,6 +1,6 @@
 name: fakestore_fase3_mandrade
 description: "Un paquete Flutter que implementa Clean Architecture para interactuar con la Fake Store API. Proporciona una interfaz simple y elegante para productos, usuarios y carritos."
-version: 1.0.2
+version: 1.0.3
 homepage: https://github.com/marco4andrade/FASE3
 repository: https://github.com/marco4andrade/FASE3
 issue_tracker: https://github.com/marco4andrade/FASE3/issues
