@@ -1,0 +1,45 @@
+name: Feature Request
+description: Sugiere una nueva funcionalidad para el paquete
+title: "[FEATURE] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ¡Gracias por sugerir una nueva funcionalidad! Por favor proporciona los siguientes detalles.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: ¿Tu solicitud está relacionada con un problema?
+      description: Una descripción clara del problema que intentas resolver
+      placeholder: Estoy frustrado cuando...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe la solución que te gustaría
+      description: Una descripción clara de lo que quieres que suceda
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Describe alternativas que hayas considerado
+      description: Una descripción de cualquier solución alternativa que hayas considerado
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Ejemplo de uso
+      description: Si es posible, proporciona un ejemplo de cómo se vería la API
+      render: dart
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Información adicional
+      description: Cualquier otra información sobre la funcionalidad solicitada
