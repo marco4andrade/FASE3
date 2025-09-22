@@ -1,0 +1,34 @@
+name: example_simple
+description: Ejemplo simple de uso del paquete fakestore_fase3_mandrade
+version: 1.0.0
+
+environment:
+  sdk: ^3.9.2
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  fakestore_fase3_mandrade:
+    path: ../
+  
+  # State Management
+  flutter_bloc: ^8.1.6
+  
+  # Dependency Injection
+  provider: ^6.1.2
+  get_it: ^7.7.0
+  
+  # Functional Programming
+  dartz: ^0.10.1
+  
+  # Utils
+  equatable: ^2.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
