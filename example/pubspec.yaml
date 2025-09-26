@@ -9,10 +9,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fakestore_fase3_mandrade: ^1.0.3
+  fakestore_fase3_mandrade:
+    path: ../
 
 dev_dependencies:
-  flutter_test:
+  flutter_test: 
     sdk: flutter
   flutter_lints: ^5.0.0
 

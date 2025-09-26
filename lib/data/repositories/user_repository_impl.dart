@@ -1,25 +1,21 @@
-import '../../domain/entities/user_entity.dart';
+import '../../domain/models/user_model.dart';
 import '../../domain/repositories/user_repository.dart';
 import '../datasources/fake_store_remote_datasource.dart';
 
 /// Implementación concreta del repositorio de usuarios
 class UserRepositoryImpl implements UserRepository {
-  final FakeStoreRemoteDataSource _remoteDataSource;
+  final FakeStoreRemoteDataSource _ds;
+  UserRepositoryImpl({FakeStoreRemoteDataSource? dataSource}) : _ds = dataSource ?? FakeStoreRemoteDataSource();
 
-  UserRepositoryImpl(this._remoteDataSource);
+  FakeStoreRemoteDataSource get dataSource => _ds;
 
   @override
-  Future<List<UserEntity>> getAllUsers({int? limit, String? sort}) async {
-    final userDtos = await _remoteDataSource.getAllUsers(
-      limit: limit,
-      sort: sort,
-    );
-    return userDtos.map((dto) => dto.toEntity()).toList();
+  Future<List<UserModel>> getAllUsers({int? limit, String? sort}) async {
+    return _ds.getAllUsers(limit: limit, sort: sort);
   }
 
   @override
-  Future<UserEntity> getUserById(int id) async {
-    final userDto = await _remoteDataSource.getUserById(id);
-    return userDto.toEntity();
+  Future<UserModel> getUserById(int id) async {
+    return _ds.getUserById(id);
   }
 }

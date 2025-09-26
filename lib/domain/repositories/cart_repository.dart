@@ -1,9 +1,9 @@
-import '../entities/cart_entity.dart';
+import '../models/cart_model.dart';
 
 /// Contrato/Interface para el repositorio de carritos
 abstract class CartRepository {
   /// Obtiene todos los carritos
-  Future<List<CartEntity>> getAllCarts({
+  Future<List<CartModel>> getAllCarts({
     int? limit,
     String? sort,
     DateTime? startDate,
@@ -11,8 +11,8 @@ abstract class CartRepository {
   });
 
   /// Obtiene un carrito por su ID
-  Future<CartEntity> getCartById(int id);
+  Future<CartModel> getCartById(int id);
 
   /// Obtiene los carritos de un usuario específico
-  Future<List<CartEntity>> getCartsByUserId(int userId);
+  Future<List<CartModel>> getCartsByUserId(int userId);
 }

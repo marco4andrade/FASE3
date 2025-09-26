@@ -1,46 +1,40 @@
-import '../../domain/entities/product_entity.dart';
+import '../../domain/models/product_model.dart';
 import '../../domain/repositories/product_repository.dart';
 import '../datasources/fake_store_remote_datasource.dart';
 
 /// Implementación concreta del repositorio de productos
 /// Conecta el dominio con los datos externos
 class ProductRepositoryImpl implements ProductRepository {
-  final FakeStoreRemoteDataSource _remoteDataSource;
+  final FakeStoreRemoteDataSource _ds;
+  ProductRepositoryImpl({FakeStoreRemoteDataSource? dataSource}) : _ds = dataSource ?? FakeStoreRemoteDataSource();
 
-  ProductRepositoryImpl(this._remoteDataSource);
+  FakeStoreRemoteDataSource get dataSource => _ds; // permite acceder a dispose si se creó internamente
 
   @override
-  Future<List<ProductEntity>> getAllProducts({int? limit, String? sort}) async {
-    final productDtos = await _remoteDataSource.getAllProducts(
-      limit: limit,
-      sort: sort,
-    );
-    // Mapear DTOs a Entidades
-    return productDtos.map((dto) => dto.toEntity()).toList();
+  Future<List<ProductModel>> getAllProducts({int? limit, String? sort}) async {
+    return _ds.getAllProducts(limit: limit, sort: sort);
   }
 
   @override
-  Future<ProductEntity> getProductById(int id) async {
-    final productDto = await _remoteDataSource.getProductById(id);
-    return productDto.toEntity();
+  Future<ProductModel> getProductById(int id) async {
+    return _ds.getProductById(id);
   }
 
   @override
   Future<List<String>> getCategories() async {
-    return _remoteDataSource.getCategories();
+    return _ds.getCategories();
   }
 
   @override
-  Future<List<ProductEntity>> getProductsByCategory(
+  Future<List<ProductModel>> getProductsByCategory(
     String category, {
     int? limit,
     String? sort,
   }) async {
-    final productDtos = await _remoteDataSource.getProductsByCategory(
+    return _ds.getProductsByCategory(
       category,
       limit: limit,
       sort: sort,
     );
-    return productDtos.map((dto) => dto.toEntity()).toList();
   }
 }

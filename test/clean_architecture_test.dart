@@ -6,14 +6,16 @@ import 'dart:convert';
 import 'package:fakestore_fase3_mandrade/fakestore_fase3_mandrade.dart';
 
 void main() {
-  group('Clean Architecture - FakeStoreService', () {
-    late FakeStoreService service;
+  group('Clean Architecture - Repos + DataSource instanciable', () {
+    late ProductRepositoryImpl productRepo;
+    late UserRepositoryImpl userRepo;
+    late CartRepositoryImpl cartRepo;
 
     setUp(() {
       // Se configurará un mock client en cada test específico
     });
 
-    test('getAllProducts debe retornar entidades de productos', () async {
+  test('getAllProducts debe retornar modelos de productos', () async {
       final mockClient = MockClient((request) async {
         final products = [
           {
@@ -38,19 +40,20 @@ void main() {
         return http.Response(json.encode(products), 200);
       });
 
-      service = FakeStoreService(httpClient: mockClient);
-      final products = await service.getAllProducts();
+  productRepo = ProductRepositoryImpl(dataSource: FakeStoreRemoteDataSource(httpClient: mockClient));
+
+  final products = await productRepo.getAllProducts();
 
       expect(products.length, 2);
-      expect(products[0], isA<ProductEntity>());
+  expect(products[0], isA<ProductModel>());
       expect(products[0].title, 'Test Product 1');
       expect(products[1].title, 'Test Product 2');
 
-      service.dispose();
+      // No dispose necesario (client mock sin recursos externos persistentes)
     });
 
     test(
-      'getProduct debe retornar una entidad de producto específica',
+  'getProduct debe retornar un modelo de producto específico',
       () async {
         final mockClient = MockClient((request) async {
           final product = {
@@ -65,18 +68,18 @@ void main() {
           return http.Response(json.encode(product), 200);
         });
 
-        service = FakeStoreService(httpClient: mockClient);
-        final product = await service.getProduct(1);
+  productRepo = ProductRepositoryImpl(dataSource: FakeStoreRemoteDataSource(httpClient: mockClient));
+  final product = await productRepo.getProductById(1);
 
-        expect(product, isA<ProductEntity>());
+  expect(product, isA<ProductModel>());
         expect(product.id, 1);
         expect(product.title, 'Test Product');
 
-        service.dispose();
+        // No dispose necesario
       },
     );
 
-    test('getAllUsers debe retornar entidades de usuarios', () async {
+  test('getAllUsers debe retornar modelos de usuarios', () async {
       final mockClient = MockClient((request) async {
         final users = [
           {
@@ -98,18 +101,18 @@ void main() {
         return http.Response(json.encode(users), 200);
       });
 
-      service = FakeStoreService(httpClient: mockClient);
-      final users = await service.getAllUsers();
+  userRepo = UserRepositoryImpl(dataSource: FakeStoreRemoteDataSource(httpClient: mockClient));
+  final users = await userRepo.getAllUsers();
 
       expect(users.length, 1);
-      expect(users[0], isA<UserEntity>());
+  expect(users[0], isA<UserModel>());
       expect(users[0].name.fullName, 'John Doe');
       expect(users[0].email, 'test@example.com');
 
-      service.dispose();
+      // No dispose necesario
     });
 
-    test('getAllCarts debe retornar entidades de carritos', () async {
+  test('getAllCarts debe retornar modelos de carritos', () async {
       final mockClient = MockClient((request) async {
         final carts = [
           {
@@ -125,15 +128,15 @@ void main() {
         return http.Response(json.encode(carts), 200);
       });
 
-      service = FakeStoreService(httpClient: mockClient);
-      final carts = await service.getAllCarts();
+  cartRepo = CartRepositoryImpl(dataSource: FakeStoreRemoteDataSource(httpClient: mockClient));
+  final carts = await cartRepo.getAllCarts();
 
       expect(carts.length, 1);
-      expect(carts[0], isA<CartEntity>());
+  expect(carts[0], isA<CartModel>());
       expect(carts[0].products.length, 2);
       expect(carts[0].totalProducts, 3);
 
-      service.dispose();
+      // No dispose necesario
     });
 
     test('debe lanzar excepción cuando la API retorna error', () async {
@@ -141,11 +144,11 @@ void main() {
         return http.Response('Not Found', 404);
       });
 
-      service = FakeStoreService(httpClient: mockClient);
+  productRepo = ProductRepositoryImpl(dataSource: FakeStoreRemoteDataSource(httpClient: mockClient));
 
-      expect(() async => await service.getProduct(999), throwsException);
+      expect(() async => await productRepo.getProductById(999), throwsException);
 
-      service.dispose();
+      // No dispose necesario
     });
 
     tearDown(() {
@@ -153,10 +156,10 @@ void main() {
     });
   });
 
-  group('Entidades del Dominio', () {
-    test('ProductEntity debe funcionar correctamente', () {
-      const rating = RatingEntity(rate: 4.5, count: 10);
-      const product = ProductEntity(
+  group('Modelos del Dominio', () {
+    test('ProductModel debe funcionar correctamente', () {
+      const rating = RatingModel(rate: 4.5, count: 10);
+      const product = ProductModel(
         id: 1,
         title: 'Test Product',
         price: 29.99,
@@ -172,17 +175,17 @@ void main() {
       expect(product.rating.rate, 4.5);
     });
 
-    test('UserEntity debe funcionar correctamente', () {
-      const name = NameEntity(firstName: 'John', lastName: 'Doe');
-      const geo = GeolocationEntity(latitude: 40.7128, longitude: -74.0060);
-      const address = AddressEntity(
+    test('UserModel debe funcionar correctamente', () {
+      const name = NameModel(firstName: 'John', lastName: 'Doe');
+      const geo = GeolocationModel(latitude: 40.7128, longitude: -74.0060);
+      const address = AddressModel(
         city: 'Test City',
         street: 'Test Street',
         number: 123,
         zipCode: '12345',
         geolocation: geo,
       );
-      const user = UserEntity(
+      const user = UserModel(
         id: 1,
         email: 'test@example.com',
         username: 'testuser',
@@ -196,12 +199,12 @@ void main() {
       expect(user.email, 'test@example.com');
     });
 
-    test('CartEntity debe calcular total correctamente', () {
+    test('CartModel debe calcular total correctamente', () {
       const products = [
-        CartProductEntity(productId: 1, quantity: 2),
-        CartProductEntity(productId: 2, quantity: 3),
+        CartProductModel(productId: 1, quantity: 2),
+        CartProductModel(productId: 2, quantity: 3),
       ];
-      final cart = CartEntity(
+      final cart = CartModel(
         id: 1,
         userId: 1,
         date: DateTime.now(),

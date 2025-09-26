@@ -1,161 +1,148 @@
-# FakeStore API - Ejemplo Simple
+# FakeStore Fase3 Mandrade
 
-Este ejemplo demuestra lo **súper fácil** que es usar el paquete `fakestore_fase3_mandrade`.
+Un paquete Flutter educativo y ligero para interactuar con la [Fake Store API](https://fakestoreapi.com/). Refactorizado a un estilo minimalista: DataSource + Repositorios + Modelos.
 
-## 🎯 ¿Qué hace este ejemplo?
+## ✨ Características
 
-Una aplicación simple con **9 botones** que demuestran **todos los métodos** disponibles en el paquete:
+✅ **Clean Architecture** - Código mantenible y testeable  
+✅ **API Clara** - DataSource + repositorios explícitos  
+✅ **Completamente tipado** - Modelos de dominio seguros con null safety  
+✅ **Manejo de errores** - Excepciones descriptivas  
+✅ **Testing incluido** - Suite completa de pruebas unitarias  
+✅ **Documentación completa** - Métodos y clases documentados  
 
+## 🛍️ API Endpoints
 
-- ✅ **Obtener Productos** - `service.getAllProducts()`
-- ✅ **Obtener Usuarios** - `service.getAllUsers()`  
-- ✅ **Obtener Carritos** - `service.getAllCarts()`
-- ✅ **Obtener Categorías** - `service.getCategories()`
+| Categoría | Endpoints | Descripción |
+|-----------|-----------|-------------|
+| **Productos** | `getAllProducts()` | Lista completa de productos |
+| | `getProduct(id)` | Detalles de producto específico |
+| | `getCategories()` | Todas las categorías |
+| | `getProductsInCategory()` | Productos por categoría |
+| **Usuarios** | `getAllUsers()` | Lista completa de usuarios |
+| | `getUser(id)` | Detalles de usuario específico |
+| **Carritos** | `getAllCarts()` | Lista completa de carritos |
+| | `getCart(id)` | Detalles de carrito específico |
+| | `getUserCarts(userId)` | Carritos de un usuario |
 
-- ✅ **Producto Específico** - `service.getProduct(1)`
-- ✅ **Productos por Categoría** - `service.getProductsInCategory('electronics')`
-- ✅ **Usuario Específico** - `service.getUser(1)`
-- ✅ **Carrito Específico** - `service.getCart(1)`
-- ✅ **Carritos de Usuario** - `service.getUserCarts(1)`
+## 📦 Instalación
 
-## 🚀 Cómo ejecutar
-
-### Opción 1: Desde el ejemplo del paquete
-
-1. Navega al directorio del ejemplo:
-```bash
-cd example
-```
-
-2. Instala las dependencias:
-```bash
-flutter pub get
-```
-
-3. Ejecuta la aplicación:
-```bash
-flutter run
-```
-
-### Opción 2: Crear tu propia aplicación
-
-1. Crea un nuevo proyecto Flutter:
-```bash
-flutter create mi_app_fakestore
-cd mi_app_fakestore
-```
-
-2. Agrega el paquete a tu `pubspec.yaml`:
 ```yaml
 dependencies:
-  flutter:
-    sdk: flutter
-  fakestore_fase3_mandrade: ^1.0.3
+  fakestore_fase3_mandrade: ^2.0.0
 ```
 
-3. Instala las dependencias y ejecuta:
-```bash
-flutter pub get
-flutter run
-```
-
-## 💡 Código principal
-
-Es **súper simple** usar el paquete:
+## 🚀 Uso Rápido (Nuevo Punto de Entrada)
 
 ```dart
 import 'package:fakestore_fase3_mandrade/fakestore_fase3_mandrade.dart';
 
-// 1. Crear el servicio
-final FakeStoreService service = FakeStoreService();
+// 1. Data source (maneja HTTP y parsing)
+final ds = FakeStoreRemoteDataSource();
 
-// 2. Usar cualquier método (ejemplos)
-final products = await service.getAllProducts();
-final users = await service.getAllUsers();
-final carts = await service.getAllCarts();
-final categories = await service.getCategories();
+// 2. Repos que necesites (inyectando el datasource)
+final productsRepo = ProductRepositoryImpl(dataSource: ds);
+final usersRepo = UserRepositoryImpl(dataSource: ds);
+final cartsRepo = CartRepositoryImpl(dataSource: ds);
 
-// Métodos específicos
-final product = await service.getProduct(1);
-final electronicsProducts = await service.getProductsInCategory('electronics');
-final user = await service.getUser(1);
-final cart = await service.getCart(1);
-final userCarts = await service.getUserCarts(1);
+// 3. Operaciones
+final products = await productsRepo.getAllProducts(limit: 5);
+final user = await usersRepo.getUserById(1);
+final carts = await cartsRepo.getAllCarts();
 
-// 3. Liberar recursos al terminar
-service.dispose();
+print(products.first.title);
+print(user.name.fullName);
+print(carts.length);
+
 ```
 
-## � Dependencias
+## 📊 Ejemplos Detallados
 
-Este ejemplo solo necesita:
+### 🛍️ Productos
 
-```yaml
-dependencies:
-  flutter:
-    sdk: flutter
-  fakestore_fase3_mandrade: ^1.0.3  # ¡El paquete publicado en pub.dev!
+```dart
+final ds = FakeStoreRemoteDataSource();
+final productsRepo = ProductRepositoryImpl(dataSource: ds);
+
+final products = await productsRepo.getAllProducts(limit: 10, sort: 'desc');
+final categories = await productsRepo.getCategories();
+final electronics = await productsRepo.getProductsByCategory('electronics');
+final product = await productsRepo.getProductById(1);
+
+print('${product.title} - \$${product.price}');
+print('Rating: ${product.rating.rate}/5 (${product.rating.count} reviews)');
+
 ```
 
+### 👥 Usuarios
 
-## 🎨 Características del ejemplo
+```dart
+final ds = FakeStoreRemoteDataSource();
+final usersRepo = UserRepositoryImpl(dataSource: ds);
 
-### 🖥️ **Interfaz Simple**
-- **9 botones** para probar cada método
-- **Área de resultados** que muestra la respuesta de la API
-- **Scrollable** para pantallas pequeñas
-- **Material Design 3** con colores adaptativos
+final users = await usersRepo.getAllUsers(limit: 5);
+final user = await usersRepo.getUserById(1);
+print('${user.name.firstName} ${user.name.lastName}');
+print('Email: ${user.email}');
+print('Ciudad: ${user.address.city}');
+```
 
-### 📱 **Funcionalidad Completa**
-- **Manejo de errores**: Cada método maneja sus propios errores
-- **Estados de carga**: Feedback visual durante las llamadas a la API
-- **Resultados legibles**: Información formateada para fácil lectura
-- **Cleanup automático**: Liberación de recursos al cerrar la app
+### 🛒 Carritos
 
-### 🔧 **Arquitectura Simple**
-- **StatefulWidget** básico con Flutter
-- **FakeStoreService** del paquete (que internamente usa Clean Architecture)
-- **Gestión de estado** con `setState()` nativo de Flutter
-- **Sin dependencias externas** complejas
+```dart
+final ds = FakeStoreRemoteDataSource();
+final cartsRepo = CartRepositoryImpl(dataSource: ds);
 
-## ✨ Lo que puedes aprender
+final carts = await cartsRepo.getAllCarts();
+final cart = await cartsRepo.getCartById(1);
+final userCarts = await cartsRepo.getCartsByUserId(1);
 
-### 🎯 **Uso del Paquete**
-- Cómo importar y usar `fakestore_fase3_mandrade`
-- Todos los métodos disponibles en `FakeStoreService`
-- Manejo básico de errores con `try-catch`
-- Liberación de recursos con `dispose()`
+print('Carrito del usuario: ${cart.userId}');
+print('Total productos: ${cart.totalProducts}');
+for (final p in cart.products) {
+  print('Producto ${p.productId}: ${p.quantity} unidades');
+}
 
-### 📱 **Flutter Básico**
-- Widgets básicos: `Scaffold`, `Column`, `ElevatedButton`, `Card`
-- Gestión de estado con `StatefulWidget` y `setState()`
-- Layout responsivo con `SingleChildScrollView`
-- Manejo de ciclo de vida con `dispose()`
+```
 
-## 🎉 ¿Por qué este ejemplo es perfecto?
+## 🏛️ Arquitectura
 
-✅ **Súper simple** - Solo un archivo `main.dart`  
-✅ **Completo** - Demuestra todos los 9 métodos del paquete  
-✅ **Fácil de entender** - Código limpio y comentado  
-✅ **Funcional** - Realmente funciona con la API real  
-✅ **Copiable** - Puedes copiar cualquier método a tu proyecto  
+Arquitectura minimalista orientada a transparencia:
 
-## 📊 Resumen de métodos demostrados
+- **Domain**: Modelos puros + mappers (`fromMap`)
+- **Data**: `FakeStoreRemoteDataSource` (HTTP + parsing) + repositorios (`*RepositoryImpl`)
 
-| Método | Función | Estado |
-|--------|---------|--------|
-| `getAllProducts()` | Obtiene todos los productos | ✅ |
-| `getAllUsers()` | Obtiene todos los usuarios | ✅ |
-| `getAllCarts()` | Obtiene todos los carritos | ✅ |
-| `getCategories()` | Obtiene todas las categorías | ✅ |
-| `getProduct(id)` | Obtiene un producto específico | ✅ |
-| `getProductsInCategory()` | Filtra productos por categoría | ✅ |
-| `getUser(id)` | Obtiene un usuario específico | ✅ |
-| `getCart(id)` | Obtiene un carrito específico | ✅ |
-| `getUserCarts(userId)` | Obtiene carritos de un usuario | ✅ |
+Racionales del cambio:
+1. Menos capas -> menos fricción educativa.
+2. Repos mantienen pequeña ergonomía (fechas en carritos) sin ocultar infraestructura.
+3. Cualquier usuario puede crear su propio "client" si quiere una fachada.
 
+Snippet opcional de client:
+```dart
+class FakeStoreClient {
+  final FakeStoreRemoteDataSource ds = FakeStoreRemoteDataSource();
+  late final ProductRepositoryImpl products = ProductRepositoryImpl(dataSource: ds);
+  late final UserRepositoryImpl users = UserRepositoryImpl(dataSource: ds);
+  late final CartRepositoryImpl carts = CartRepositoryImpl(dataSource: ds);
+}
+```
 
+## 📱 Aplicación de Ejemplo
+
+Incluye una aplicación completa en `example/` que demuestra todos los métodos del paquete con UI moderna y manejo de estados.
+
+```bash
+cd example
+flutter pub get
+flutter run
+```
+
+## 📚 Documentación
+
+- [Documentación API](https://fakestoreapi.com/docs)
+- [Changelog](CHANGELOG.md)
+- [Licencia](LICENSE)
 
 ---
 
-¡Con este ejemplo tienes todo lo que necesitas para empezar a usar `fakestore_fase3_mandrade` en tus proyectos! 🚀
+**Creado por Marco Andrade** - [GitHub](https://github.com/marco4andrade/FASE3)

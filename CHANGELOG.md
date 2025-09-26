@@ -4,8 +4,41 @@ Todos los cambios notables de este proyecto se documentarán en este archivo.
 
 ## [1.0.3] - 2025-09-22
 
+## [2.0.0] - 2025-09-26
+
+### 🚨 Breaking Change
+- Eliminada la fachada `FakeStoreService` (redundancia). Ahora el punto de entrada recomendado es `FakeStoreRemoteDataSource` junto con los repositorios `ProductRepositoryImpl`, `UserRepositoryImpl`, `CartRepositoryImpl`.
+
+### ✅ Razones del cambio
+1. Reducir capas innecesarias y hacer más transparente el flujo HTTP -> Modelo.
+2. Evitar duplicación de API y mantenimiento redundante.
+3. Facilitar testing directo de data source y repositorios.
+4. Permitir que los usuarios construyan su propio "client" si necesitan una fachada personalizada.
+
+### 🧩 Migración rápida
+Antes:
+```dart
+final service = FakeStoreService();
+final products = await service.getAllProducts();
+service.dispose();
+```
+Después:
+```dart
+final ds = FakeStoreRemoteDataSource();
+final productsRepo = ProductRepositoryImpl(ds);
+final products = await productsRepo.getAllProducts();
+```
+
+### ✨ Extras
+- Exportadas interfaces de repositorio para facilitar mocking.
+- README actualizado con ejemplos y snippet opcional de `FakeStoreClient`.
+
+### 🔄 Ajuste posterior (pre-publicación)
+- Se revirtió el `FakeStoreRemoteDataSource` de métodos estáticos a instancia para encapsular el `http.Client`, y luego se simplificó eliminando `dispose()` al considerar el paquete de uso básico.
+- Los repos aceptan `dataSource:` explícito (opcional; crean uno interno si no se pasa).
+
+
 ### ✨ Actualizado - Ejemplo Completo
-- **🎯 Cobertura 100%**: Ejemplo ahora demuestra TODOS los 9 métodos del paquete
 - **🔥 9 Botones Funcionales**: Cada método tiene su propio botón de prueba
 - **📋 Métodos Generales**: getAllProducts(), getAllUsers(), getAllCarts(), getCategories()
 - **🎯 Métodos Específicos**: getProduct(id), getProductsInCategory(), getUser(id), getCart(id), getUserCarts(userId)
@@ -24,6 +57,12 @@ Todos los cambios notables de este proyecto se documentarán en este archivo.
 - **Tabla de Métodos**: Resumen visual de los 9/9 métodos implementados (100%)
 - **Instrucciones Claras**: Pasos precisos para ejecutar el ejemplo
 - **Código de Ejemplo**: Snippets actualizados mostrando todos los métodos disponibles
+
+### 🔄 Refactor Arquitectura (post 1.0.3 - no publicado)
+- Migración de Entidades + DTOs a Modelos + Mappers en capa Domain
+- Eliminación de `*Entity` y `*Dto` en favor de `*Model` y mapeo manual `fromMap`
+- DataSource ahora retorna directamente modelos de dominio
+- Simplificación de capas para propósito educativo del reto
 
 ## [1.0.2] - 2025-09-22
 

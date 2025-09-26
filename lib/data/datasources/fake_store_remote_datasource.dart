@@ -1,180 +1,124 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/product_dto.dart';
-import '../models/user_dto.dart';
-import '../models/cart_dto.dart';
+import '../../domain/models/product_model.dart';
+import '../../domain/models/user_model.dart';
+import '../../domain/models/cart_model.dart';
+import '../../domain/mappers/product_mappers.dart';
+import '../../domain/mappers/user_mappers.dart';
+import '../../domain/mappers/cart_mappers.dart';
 
-/// DataSource remoto para la Fake Store API
-/// Responsable SOLO de hacer las llamadas HTTP y convertir JSON
+/// DataSource remoto para la Fake Store API.
+/// Encapsula peticiones HTTP y mapping JSON -> Modelos.
 class FakeStoreRemoteDataSource {
   static const String _baseUrl = 'https://fakestoreapi.com';
-  final http.Client _httpClient;
+  final http.Client _client;
 
-  FakeStoreRemoteDataSource({http.Client? httpClient})
-    : _httpClient = httpClient ?? http.Client();
-
-  void dispose() {
-    _httpClient.close();
-  }
+  FakeStoreRemoteDataSource({http.Client? httpClient}) : _client = httpClient ?? http.Client();
 
   // ===== PRODUCTOS =====
-
-  Future<List<ProductDto>> getAllProducts({int? limit, String? sort}) async {
+  Future<List<ProductModel>> getAllProducts({int? limit, String? sort}) async {
     var url = '$_baseUrl/products';
-    final queryParams = <String, String>{};
+    final qp = <String, String>{};
+    if (limit != null) qp['limit'] = '$limit';
+    if (sort != null) qp['sort'] = sort;
+    if (qp.isNotEmpty) url += '?${Uri(queryParameters: qp).query}';
 
-    if (limit != null) queryParams['limit'] = limit.toString();
-    if (sort != null) queryParams['sort'] = sort;
-
-    if (queryParams.isNotEmpty) {
-      url += '?${Uri(queryParameters: queryParams).query}';
+    final resp = await _client.get(Uri.parse(url));
+    if (resp.statusCode != 200) {
+      throw Exception('Error al obtener productos: ${resp.statusCode}');
     }
-
-    final response = await _httpClient.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonList = json.decode(response.body);
-      return jsonList.map((json) => ProductDto.fromJson(json)).toList();
-    } else {
-      throw Exception('Error al obtener productos: ${response.statusCode}');
-    }
+    final List<dynamic> data = json.decode(resp.body);
+    return data.map((j) => ProductMapper.fromMap(j)).toList();
   }
 
-  Future<ProductDto> getProductById(int id) async {
-    final response = await _httpClient.get(Uri.parse('$_baseUrl/products/$id'));
-
-    if (response.statusCode == 200) {
-      return ProductDto.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Error al obtener producto $id: ${response.statusCode}');
+  Future<ProductModel> getProductById(int id) async {
+    final resp = await _client.get(Uri.parse('$_baseUrl/products/$id'));
+    if (resp.statusCode != 200) {
+      throw Exception('Error al obtener producto $id: ${resp.statusCode}');
     }
+    return ProductMapper.fromMap(json.decode(resp.body));
   }
 
   Future<List<String>> getCategories() async {
-    final response = await _httpClient.get(
-      Uri.parse('$_baseUrl/products/categories'),
-    );
-
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonList = json.decode(response.body);
-      return jsonList.cast<String>();
-    } else {
-      throw Exception('Error al obtener categorías: ${response.statusCode}');
+    final resp = await _client.get(Uri.parse('$_baseUrl/products/categories'));
+    if (resp.statusCode != 200) {
+      throw Exception('Error al obtener categorías: ${resp.statusCode}');
     }
+    final List<dynamic> data = json.decode(resp.body);
+    return data.cast<String>();
   }
 
-  Future<List<ProductDto>> getProductsByCategory(
-    String category, {
-    int? limit,
-    String? sort,
-  }) async {
+  Future<List<ProductModel>> getProductsByCategory(String category, {int? limit, String? sort}) async {
     var url = '$_baseUrl/products/category/$category';
-    final queryParams = <String, String>{};
+    final qp = <String, String>{};
+    if (limit != null) qp['limit'] = '$limit';
+    if (sort != null) qp['sort'] = sort;
+    if (qp.isNotEmpty) url += '?${Uri(queryParameters: qp).query}';
 
-    if (limit != null) queryParams['limit'] = limit.toString();
-    if (sort != null) queryParams['sort'] = sort;
-
-    if (queryParams.isNotEmpty) {
-      url += '?${Uri(queryParameters: queryParams).query}';
+    final resp = await _client.get(Uri.parse(url));
+    if (resp.statusCode != 200) {
+      throw Exception('Error al obtener productos de categoría $category: ${resp.statusCode}');
     }
-
-    final response = await _httpClient.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonList = json.decode(response.body);
-      return jsonList.map((json) => ProductDto.fromJson(json)).toList();
-    } else {
-      throw Exception(
-        'Error al obtener productos de categoría $category: ${response.statusCode}',
-      );
-    }
+    final List<dynamic> data = json.decode(resp.body);
+    return data.map((j) => ProductMapper.fromMap(j)).toList();
   }
 
   // ===== USUARIOS =====
-
-  Future<List<UserDto>> getAllUsers({int? limit, String? sort}) async {
+  Future<List<UserModel>> getAllUsers({int? limit, String? sort}) async {
     var url = '$_baseUrl/users';
-    final queryParams = <String, String>{};
+    final qp = <String, String>{};
+    if (limit != null) qp['limit'] = '$limit';
+    if (sort != null) qp['sort'] = sort;
+    if (qp.isNotEmpty) url += '?${Uri(queryParameters: qp).query}';
 
-    if (limit != null) queryParams['limit'] = limit.toString();
-    if (sort != null) queryParams['sort'] = sort;
-
-    if (queryParams.isNotEmpty) {
-      url += '?${Uri(queryParameters: queryParams).query}';
+    final resp = await _client.get(Uri.parse(url));
+    if (resp.statusCode != 200) {
+      throw Exception('Error al obtener usuarios: ${resp.statusCode}');
     }
-
-    final response = await _httpClient.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonList = json.decode(response.body);
-      return jsonList.map((json) => UserDto.fromJson(json)).toList();
-    } else {
-      throw Exception('Error al obtener usuarios: ${response.statusCode}');
-    }
+    final List<dynamic> data = json.decode(resp.body);
+    return data.map((j) => UserMapper.fromMap(j)).toList();
   }
 
-  Future<UserDto> getUserById(int id) async {
-    final response = await _httpClient.get(Uri.parse('$_baseUrl/users/$id'));
-
-    if (response.statusCode == 200) {
-      return UserDto.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Error al obtener usuario $id: ${response.statusCode}');
+  Future<UserModel> getUserById(int id) async {
+    final resp = await _client.get(Uri.parse('$_baseUrl/users/$id'));
+    if (resp.statusCode != 200) {
+      throw Exception('Error al obtener usuario $id: ${resp.statusCode}');
     }
+    return UserMapper.fromMap(json.decode(resp.body));
   }
 
   // ===== CARRITOS =====
-
-  Future<List<CartDto>> getAllCarts({
-    int? limit,
-    String? sort,
-    String? startDate,
-    String? endDate,
-  }) async {
+  Future<List<CartModel>> getAllCarts({int? limit, String? sort, String? startDate, String? endDate}) async {
     var url = '$_baseUrl/carts';
-    final queryParams = <String, String>{};
+    final qp = <String, String>{};
+    if (limit != null) qp['limit'] = '$limit';
+    if (sort != null) qp['sort'] = sort;
+    if (startDate != null) qp['startdate'] = startDate;
+    if (endDate != null) qp['enddate'] = endDate;
+    if (qp.isNotEmpty) url += '?${Uri(queryParameters: qp).query}';
 
-    if (limit != null) queryParams['limit'] = limit.toString();
-    if (sort != null) queryParams['sort'] = sort;
-    if (startDate != null) queryParams['startdate'] = startDate;
-    if (endDate != null) queryParams['enddate'] = endDate;
-
-    if (queryParams.isNotEmpty) {
-      url += '?${Uri(queryParameters: queryParams).query}';
+    final resp = await _client.get(Uri.parse(url));
+    if (resp.statusCode != 200) {
+      throw Exception('Error al obtener carritos: ${resp.statusCode}');
     }
-
-    final response = await _httpClient.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonList = json.decode(response.body);
-      return jsonList.map((json) => CartDto.fromJson(json)).toList();
-    } else {
-      throw Exception('Error al obtener carritos: ${response.statusCode}');
-    }
+    final List<dynamic> data = json.decode(resp.body);
+    return data.map((j) => CartMapper.fromMap(j)).toList();
   }
 
-  Future<CartDto> getCartById(int id) async {
-    final response = await _httpClient.get(Uri.parse('$_baseUrl/carts/$id'));
-
-    if (response.statusCode == 200) {
-      return CartDto.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Error al obtener carrito $id: ${response.statusCode}');
+  Future<CartModel> getCartById(int id) async {
+    final resp = await _client.get(Uri.parse('$_baseUrl/carts/$id'));
+    if (resp.statusCode != 200) {
+      throw Exception('Error al obtener carrito $id: ${resp.statusCode}');
     }
+    return CartMapper.fromMap(json.decode(resp.body));
   }
 
-  Future<List<CartDto>> getCartsByUserId(int userId) async {
-    final response = await _httpClient.get(
-      Uri.parse('$_baseUrl/carts/user/$userId'),
-    );
-
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonList = json.decode(response.body);
-      return jsonList.map((json) => CartDto.fromJson(json)).toList();
-    } else {
-      throw Exception(
-        'Error al obtener carritos del usuario $userId: ${response.statusCode}',
-      );
+  Future<List<CartModel>> getCartsByUserId(int userId) async {
+    final resp = await _client.get(Uri.parse('$_baseUrl/carts/user/$userId'));
+    if (resp.statusCode != 200) {
+      throw Exception('Error al obtener carritos del usuario $userId: ${resp.statusCode}');
     }
+    final List<dynamic> data = json.decode(resp.body);
+    return data.map((j) => CartMapper.fromMap(j)).toList();
   }
 }
