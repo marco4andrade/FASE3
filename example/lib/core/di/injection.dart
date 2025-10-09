@@ -9,6 +9,8 @@ import '../../domain/usecases/get_user_by_id.dart';
 import '../../domain/usecases/get_all_carts.dart';
 import '../../domain/usecases/get_cart_by_id.dart';
 import '../../domain/usecases/get_carts_by_user_id.dart';
+import '../../domain/usecases/create_user.dart';
+import '../../domain/usecases/login_user.dart';
 import '../../presentation/controllers/store_controller.dart';
 
 /// Configuración manual simple (sin paquetes de DI) para el ejemplo.
@@ -27,6 +29,8 @@ class ExampleInjector {
   late final GetAllCarts getAllCarts;
   late final GetCartById getCartById;
   late final GetCartsByUserId getCartsByUserId;
+  late final CreateUser createUser;
+  late final LoginUser loginUser;
 
   late final StoreController storeController;
 
@@ -48,6 +52,9 @@ class ExampleInjector {
     getCartById = GetCartById(_cartRepo);
     getCartsByUserId = GetCartsByUserId(_cartRepo);
 
+  createUser = CreateUser(_userRepo);
+  loginUser = LoginUser(_userRepo);
+
     storeController = StoreController(
       getAllProducts: getAllProducts,
       getProductById: getProductById,
@@ -58,6 +65,8 @@ class ExampleInjector {
       getAllCarts: getAllCarts,
       getCartById: getCartById,
       getCartsByUserId: getCartsByUserId,
+      createUser: createUser,
+      loginUser: loginUser,
     );
   }
 }

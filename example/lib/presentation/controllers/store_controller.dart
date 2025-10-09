@@ -7,6 +7,9 @@ import '../../domain/usecases/get_user_by_id.dart';
 import '../../domain/usecases/get_all_carts.dart';
 import '../../domain/usecases/get_cart_by_id.dart';
 import '../../domain/usecases/get_carts_by_user_id.dart';
+import '../../domain/usecases/create_user.dart';
+import '../../domain/usecases/login_user.dart';
+import 'package:fakestore_fase3_mandrade/fakestore_fase3_mandrade.dart';
 
 /// Controlador simple para orquestar casos de uso.
 class StoreController {
@@ -19,6 +22,8 @@ class StoreController {
   final GetAllCarts getAllCarts;
   final GetCartById getCartById;
   final GetCartsByUserId getCartsByUserId;
+  final CreateUser createUser;
+  final LoginUser loginUser;
 
   StoreController({
     required this.getAllProducts,
@@ -30,6 +35,8 @@ class StoreController {
     required this.getAllCarts,
     required this.getCartById,
     required this.getCartsByUserId,
+    required this.createUser,
+    required this.loginUser,
   });
 
   Future<String> demoProducts() async {
@@ -78,4 +85,35 @@ class StoreController {
     final total = carts.fold<int>(0, (s, c) => s + c.products.length);
     return 'Carts de user 1: ${carts.length}\nTotal productos: $total';
   }
+
+  Future<String> demoCreateUser() async {
+    final input = CreateUserInput(
+      email: 'demo_${DateTime.now().millisecondsSinceEpoch}@example.com',
+      username: 'demoUser${DateTime.now().millisecondsSinceEpoch % 10000}',
+      password: 'DemoPass123',
+      firstName: 'Demo',
+      lastName: 'User',
+      city: 'DemoCity',
+      street: 'DemoStreet',
+      number: 1,
+      zipCode: '00000',
+      geoLat: '0',
+      geoLong: '0',
+      phone: '000-000',
+    );
+    final u = await createUser(input);
+    return 'Usuario creado -> id: ${u.id}\nusername: ${u.username}';
+  }
+
+  Future<String> demoLogin() async {
+    // Credenciales de ejemplo de la documentación de fakestore
+    const user = 'mor_2314';
+    const pass = '83r5^_';
+    final token = await loginUser(username: user, password: pass);
+    return 'Login OK\nToken (truncado): ${token.substring(0, token.length > 25 ? 25 : token.length)}...';
+  }
+
+  // Métodos genéricos para uso desde formularios
+  Future<UserModel> createUserCustom(CreateUserInput input) => createUser(input);
+  Future<String> loginCustom(String username, String password) => loginUser(username: username, password: password);
 }

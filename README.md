@@ -21,6 +21,8 @@ Un paquete Flutter educativo y ligero para interactuar con la [Fake Store API](h
 | | `getProductsInCategory()` | Productos por categoría |
 | **Usuarios** | `getAllUsers()` | Lista completa de usuarios |
 | | `getUser(id)` | Detalles de usuario específico |
+| | `createUser(input)` | Crea nuevo usuario |
+| | `login(username,password)` | Autentica y retorna token JWT |
 | **Carritos** | `getAllCarts()` | Lista completa de carritos |
 | | `getCart(id)` | Detalles de carrito específico |
 | | `getUserCarts(userId)` | Carritos de un usuario |
@@ -88,6 +90,20 @@ print('${user.name.firstName} ${user.name.lastName}');
 print('Email: ${user.email}');
 print('Ciudad: ${user.address.city}');
 // No se requiere dispose.
+
+// Crear nuevo usuario
+final nuevo = await usersRepo.createUser(
+  CreateUserInput.minimal(
+    email: 'new@example.com',
+    username: 'newuser',
+    password: 'Secret123',
+  ),
+);
+print('Usuario creado id=${nuevo.id}');
+
+// Login (autenticación)
+final token = await usersRepo.login('mor_2314', '83r5^_');
+print('Token: $token');
 ```
 
 ### 🛒 Carritos

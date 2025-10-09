@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/di/injection.dart';
+import '../widgets/user_creation_form.dart';
+import '../widgets/login_form.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -37,6 +39,23 @@ class _HomePageState extends State<HomePage> {
   void _testCarts() => _run(_injector.storeController.demoCarts);
   void _testSingleCart() => _run(_injector.storeController.demoCart);
   void _testUserCarts() => _run(_injector.storeController.demoUserCarts);
+  void _testCreateUser() => _run(_injector.storeController.demoCreateUser);
+  void _testLogin() => _run(_injector.storeController.demoLogin);
+  void _openCreateUserForm() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => UserCreationForm(onSubmit: _injector.storeController.createUserCustom),
+    );
+  }
+
+  void _openLoginForm() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => LoginForm(onSubmit: _injector.storeController.loginCustom),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +93,18 @@ class _HomePageState extends State<HomePage> {
               ElevatedButton(onPressed: _testSingleCart, child: const Text('Carrito Específico (ID: 1)')),
               const SizedBox(height: 8),
               ElevatedButton(onPressed: _testUserCarts, child: const Text('Carritos de Usuario')),
+              const SizedBox(height: 24),
+              Text('Usuarios (extra)', style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              ElevatedButton(onPressed: _testCreateUser, child: const Text('Crear Usuario (demo)')),
+              const SizedBox(height: 8),
+              ElevatedButton(onPressed: _testLogin, child: const Text('Login (credenciales demo)')),
+              const SizedBox(height: 16),
+              Text('Formularios', style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              OutlinedButton(onPressed: _openCreateUserForm, child: const Text('Formulario Crear Usuario')),
+              const SizedBox(height: 8),
+              OutlinedButton(onPressed: _openLoginForm, child: const Text('Formulario Login')),
             ],
           ),
         ),

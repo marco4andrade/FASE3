@@ -6,6 +6,7 @@ import '../../domain/models/cart_model.dart';
 import '../../domain/mappers/product_mappers.dart';
 import '../../domain/mappers/user_mappers.dart';
 import '../../domain/mappers/cart_mappers.dart';
+import '../../domain/models/create_user_input.dart';
 
 /// DataSource remoto para la Fake Store API.
 /// Encapsula peticiones HTTP y mapping JSON -> Modelos.
@@ -85,6 +86,39 @@ class FakeStoreRemoteDataSource {
       throw Exception('Error al obtener usuario $id: ${resp.statusCode}');
     }
     return UserMapper.fromMap(json.decode(resp.body));
+  }
+
+  /// Crea un nuevo usuario.
+  /// Retorna el [UserModel] con el id asignado por la API.
+  Future<UserModel> createUser(CreateUserInput input) async {
+    final resp = await _client.post(
+      Uri.parse('$_baseUrl/users'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(input.toJson()),
+    );
+    if (resp.statusCode != 200 && resp.statusCode != 201) {
+      throw Exception('Error al crear usuario: ${resp.statusCode} ${resp.body}');
+    }
+    return UserMapper.fromMap(json.decode(resp.body));
+  }
+
+  /// Autentica un usuario existente y retorna el token JWT devuelto por la API.
+  Future<String> login({required String username, required String password}) async {
+    final resp = await _client.post(
+      Uri.parse('$_baseUrl/auth/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'username': username, 'password': password}),
+    );
+    // La API debería retornar 200, pero toleramos 201 (casos atípicos de algunos proxies/ambientes)
+    if (resp.statusCode != 200 && resp.statusCode != 201) {
+      throw Exception('Error de autenticación: ${resp.statusCode} ${resp.body}');
+    }
+    final data = json.decode(resp.body);
+    final token = data['token'];
+    if (token is! String || token.isEmpty) {
+      throw Exception('Token inválido en respuesta de login');
+    }
+    return token;
   }
 
   // ===== CARRITOS =====

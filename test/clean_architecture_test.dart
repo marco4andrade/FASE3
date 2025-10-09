@@ -112,6 +112,65 @@ void main() {
       // No dispose necesario
     });
 
+    test('createUser debe retornar usuario con id asignado', () async {
+      final mockClient = MockClient((request) async {
+        if (request.method == 'POST' && request.url.path == '/users') {
+          final body = json.decode(request.body);
+            // Simulamos retorno con id
+          body['id'] = 50;
+          return http.Response(json.encode(body), 200);
+        }
+        return http.Response('Not Found', 404);
+      });
+
+      userRepo = UserRepositoryImpl(dataSource: FakeStoreRemoteDataSource(httpClient: mockClient));
+
+      const input = CreateUserInput(
+        email: 'new@example.com',
+        username: 'newuser',
+        password: 'Secret123',
+        firstName: 'New',
+        lastName: 'User',
+        city: 'City',
+        street: 'Street',
+        number: 1,
+        zipCode: '00000',
+        geoLat: '0',
+        geoLong: '0',
+        phone: '000-000',
+      );
+
+      final created = await userRepo.createUser(input);
+      expect(created.id, 50);
+      expect(created.username, 'newuser');
+    });
+
+    test('login debe retornar token', () async {
+      final mockClient = MockClient((request) async {
+        if (request.method == 'POST' && request.url.path == '/auth/login') {
+          return http.Response(json.encode({'token': 'abc.def.ghi'}), 200);
+        }
+        return http.Response('Not Found', 404);
+      });
+
+      userRepo = UserRepositoryImpl(dataSource: FakeStoreRemoteDataSource(httpClient: mockClient));
+      final token = await userRepo.login('user', 'pass');
+      expect(token, 'abc.def.ghi');
+    });
+
+    test('login debe aceptar status 201 y retornar token', () async {
+      final mockClient = MockClient((request) async {
+        if (request.method == 'POST' && request.url.path == '/auth/login') {
+          return http.Response(json.encode({'token': 'zzz.yyy.xxx'}), 201);
+        }
+        return http.Response('Not Found', 404);
+      });
+
+      userRepo = UserRepositoryImpl(dataSource: FakeStoreRemoteDataSource(httpClient: mockClient));
+      final token = await userRepo.login('user', 'pass');
+      expect(token, 'zzz.yyy.xxx');
+    });
+
   test('getAllCarts debe retornar modelos de carritos', () async {
       final mockClient = MockClient((request) async {
         final carts = [

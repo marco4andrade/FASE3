@@ -6,6 +6,25 @@ Todos los cambios notables de este proyecto se documentarán en este archivo.
 
 ## [2.0.0] - 2025-09-26
 
+## [2.1.0] - 2025-10-09
+
+### Añadido
+- Creación de usuario: método `createUser(CreateUserInput)` en `FakeStoreRemoteDataSource` y repositorio.
+- Autenticación: método `login(username,password)` retorna token JWT.
+- Modelo `CreateUserInput` con fábrica `CreateUserInput.minimal` para alta rápida (username, email, password).
+- Tests unitarios para creación y login (incluyendo status 201 tolerado en login).
+
+### Mejorado
+- Ejemplo: botones y formularios (bottom sheets) para crear usuario y login.
+- README: documentación actualizada con login y creación minimal.
+
+### Cambiado
+- `login` ahora acepta `200` o `201` como respuesta exitosa según comportamiento observado en algunos entornos.
+
+### Notas
+- Versión menor (minor) porque agrega funcionalidades sin romper compatibilidad.
+- Formularios del ejemplo no forman parte del API público (solo demostración).
+
 ### 🚨 Breaking Change
 - Eliminada la fachada `FakeStoreService` (redundancia). Ahora el punto de entrada recomendado es `FakeStoreRemoteDataSource` junto con los repositorios `ProductRepositoryImpl`, `UserRepositoryImpl`, `CartRepositoryImpl`.
 

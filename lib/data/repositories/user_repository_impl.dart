@@ -1,4 +1,5 @@
 import '../../domain/models/user_model.dart';
+import '../../domain/models/create_user_input.dart';
 import '../../domain/repositories/user_repository.dart';
 import '../datasources/fake_store_remote_datasource.dart';
 
@@ -17,5 +18,15 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<UserModel> getUserById(int id) async {
     return _ds.getUserById(id);
+  }
+
+  @override
+  Future<UserModel> createUser(CreateUserInput input) async {
+    return _ds.createUser(input);
+  }
+
+  @override
+  Future<String> login(String username, String password) async {
+    return _ds.login(username: username, password: password);
   }
 }

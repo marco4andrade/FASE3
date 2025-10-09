@@ -21,3 +21,4 @@ export 'domain/repositories/cart_repository.dart';
 export 'domain/models/product_model.dart';
 export 'domain/models/user_model.dart';
 export 'domain/models/cart_model.dart';
+export 'domain/models/create_user_input.dart';
