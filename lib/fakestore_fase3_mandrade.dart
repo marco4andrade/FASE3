@@ -3,6 +3,10 @@
 /// Proporciona una API simple y fácil de usar para desarrolladores.
 library;
 
+// Either type y Failure types para manejo de errores funcional
+export 'package:dartz/dartz.dart' show Either, Left, Right;
+export 'domain/failures/failures.dart';
+
 // ===== API PÚBLICA =====
 // Data Source principal (nuevo punto de entrada)
 export 'data/datasources/fake_store_remote_datasource.dart';

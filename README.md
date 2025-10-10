@@ -209,7 +209,31 @@ final repo = ProductRepositoryImpl(dataSource: ds);
 
 Con esto obtienes una base clara, extensible y fácil de leer desde el primer minuto.
 
-## 📱 Aplicación de Ejemplo
+## �️ Mejora: Gestión de errores (Either / dartz)
+
+Se ha mejorado el manejo de errores del paquete usando el tipo funcional `Either` proporcionado por la dependencia `dartz`.
+
+- El `DataSource` ahora captura excepciones (conectividad, parsing, HTTP) y retorna `Either<Failure, T>` en lugar de lanzar `Exception` crudas.
+- Se añadieron tipos de fallo (`Failure`) específicos: `ServerFailure`, `NetworkFailure`, `ParsingFailure`, `AuthenticationFailure`, `NotFoundFailure`, `ValidationFailure`, `UnknownFailure`.
+- Los repositorios y casos de uso ahora propagan `Either`, y la UI/Controladores deben usar `fold` para transformar `Left`/`Right` en mensajes/acciones apropiadas.
+
+Beneficios:
+
+- Errores tipados y predecibles que facilitan el testing y el manejo en capas superiores.
+- Permite componer operaciones y modelar flujos fallidos sin lanzar excepciones.
+- Mejora la experiencia de usuario mostrando mensajes más concretos.
+
+Ejemplo rápido:
+
+```dart
+final result = await productsRepo.getAllProducts();
+result.fold(
+  (failure) => print('Error: ${failure.message}'),
+  (products) => print('Productos: ${products.length}'),
+);
+```
+
+## �📱 Aplicación de Ejemplo
 
 Incluye una aplicación completa en `example/` que demuestra todos los métodos del paquete con UI moderna y manejo de estados.
 

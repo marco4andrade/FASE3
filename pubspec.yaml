@@ -1,6 +1,6 @@
 name: fakestore_fase3_mandrade
 description: "Paquete minimalista para la Fake Store API: DataSource + Repositorios + Modelos tipados (sin fachada)."
-version: 2.1.0
+version: 2.2.0
 homepage: https://github.com/marco4andrade/FASE3
 repository: https://github.com/marco4andrade/FASE3
 issue_tracker: https://github.com/marco4andrade/FASE3/issues
@@ -13,10 +13,11 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.1.0
+  dartz: ^0.10.1
 
 dev_dependencies:
   flutter_test:
-    sdk: flutter
+    sdk: flutter  
   flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the

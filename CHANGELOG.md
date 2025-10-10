@@ -8,6 +8,21 @@ Todos los cambios notables de este proyecto se documentarán en este archivo.
 
 ## [2.1.0] - 2025-10-09
 
+## [2.2.0] - 2025-10-10
+
+### Mejorado
+- Gestión de errores: refactorizada la estrategia de errores para usar `Either` (paquete `dartz`) y tipos `Failure` específicos.
+
+### Detalles
+- `FakeStoreRemoteDataSource` ahora devuelve `Either<Failure, T>` capturando errores de red, parsing y HTTP y mapeándolos a `Left(Failure)`.
+- Se añadieron clases de fallo (`ServerFailure`, `NetworkFailure`, `ParsingFailure`, `AuthenticationFailure`, `NotFoundFailure`, `ValidationFailure`, `UnknownFailure`).
+- Repositorios y use-cases ahora propagan `Either` para que la UI/Controladores puedan manejar `Left/Right` con `fold`.
+
+### Beneficios
+- Manejo de errores tipado y predecible, más fácil de testear y componer.
+- Mensajes de error más descriptivos para la UI.
+
+
 ### Añadido
 - Creación de usuario: método `createUser(CreateUserInput)` en `FakeStoreRemoteDataSource` y repositorio.
 - Autenticación: método `login(username,password)` retorna token JWT.
